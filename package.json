@@ -1,0 +1,9 @@
+{
+  "name": "compareci-cloudinary-delete",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "jose": "^5.9.6",
+    "vercel": "^58.4.4"
+  }
+}
