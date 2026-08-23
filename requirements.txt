@@ -1,0 +1,5 @@
+fastapi
+httpx
+beautifulsoup4
+python-dotenv
+firebase-admin
