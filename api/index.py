@@ -145,9 +145,16 @@ async def scrape_woocommerce_generic(query, site_name, base_url):
     async with httpx.AsyncClient(verify=False, follow_redirects=True, timeout=20.0) as client:
         try:
             res = await client.get(search_url, headers=get_headers())
+            print(f"[{site_name}] URL={search_url} status={res.status_code} taille_reponse={len(res.text)}")
+
+            if res.status_code != 200:
+                print(f"[{site_name}] Bloqué ou erreur HTTP {res.status_code} — extrait: {res.text[:300]}")
+                return results
+
             soup = BeautifulSoup(res.text, 'html.parser')
 
             products = soup.select('.product, .type-product, .product-grid-item, .wd-item')
+            print(f"[{site_name}] {len(products)} élément(s) trouvé(s) avec les sélecteurs actuels")
 
             for product in products[:40]:
                 try:
@@ -179,10 +186,11 @@ async def scrape_woocommerce_generic(query, site_name, base_url):
                             "image": img_url,
                             "source": site_name
                         })
-                except Exception:
+                except Exception as e:
+                    print(f"[{site_name}] Erreur sur un produit : {e}")
                     continue
         except Exception as e:
-            print(f"[{site_name}] Erreur : {e}")
+            print(f"[{site_name}] Erreur requête : {e}")
 
     return results
 
